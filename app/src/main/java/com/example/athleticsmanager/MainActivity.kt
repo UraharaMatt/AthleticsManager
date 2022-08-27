@@ -6,11 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.webkit.MimeTypeMap
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -22,7 +18,8 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import java.io.File
+import com.google.firebase.storage.ktx.component1
+import com.google.firebase.storage.ktx.component2
 
 class MainActivity : AppCompatActivity() {
     lateinit var storage: FirebaseStorage
@@ -98,30 +95,32 @@ class MainActivity : AppCompatActivity() {
     }*/
     private fun showFileChooser(launchUploadActivity: ActivityResultLauncher<Intent>) {
         val intentUp = Intent()
-        intentUp.type = "image/*"
+        intentUp.type = "*/*"
         intentUp.action = Intent.ACTION_GET_CONTENT
         launchUploadActivity.launch(intentUp)
     }
     private fun onUploadClick() {
-        /*val filename = binding.eTXTNomeFile.text.toString().trim()
+        val filename = binding.eTXTNomeFile.text.toString().trim()
         if (filename.isEmpty()) {
             binding.eTXTNomeFile.error = "Inserire il nome dell'atleta"
             return
-        }*/
-        val filenameEst = "prova8.jpg"//filename+"."+ getFileExtension(fileUri)
+        }
+        val filenameEst = filename+"."+ getFileExtension(fileUri)
         // [START create_child_reference]
         // Create a child reference
         // imagesRef now points to "upload"
-        val uploadref = storageRef.child("upload")
-        val uploadtask = uploadref.child("/$filenameEst").putFile(fileUri)
+        val uploadref = storageRef.child("upload/")
+        val uploadtask = uploadref.child("$filenameEst").putFile(fileUri)
         uploadtask.addOnFailureListener {
-            Toast.makeText(this, "File Not Uploaded", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "File Not Uploaded", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "File Uploaded:NULL")
         }.addOnSuccessListener {
             binding.imageView.setImageURI(null)
-            Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "File Uploaded:SUCCESS")
-
+        }.addOnProgressListener { (bytesTransferred, totalByteCount) ->
+            val progress = (100.0 * bytesTransferred) / totalByteCount
+            Log.d(TAG, "Upload is $progress% done")
         }
     }
     fun getFileExtension(uri: Uri?): String? {

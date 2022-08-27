@@ -4,6 +4,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#373737"
     tools:context="MainActivity">
 
     <LinearLayout
@@ -17,14 +18,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Choose" />
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/gotham2"
+            android:text="Choose"
+            android:textColor="@color/orangeAccent"
+            android:textColorHint="@color/black" />
 
         <EditText
             android:id="@+id/eTXTNomeFile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:hint="Inserisci nome atleta" />
+            android:fontFamily="@font/gotham2"
+            android:hint="Inserisci nome atleta"
+            android:textColor="@color/white"
+            android:textColorHighlight="#FF5722"
+            android:textColorHint="@color/white"
+            android:textColorLink="@color/orangeAccent" />
 
     </LinearLayout>
 
@@ -33,9 +43,9 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/linearLayout" />
+        android:layout_alignParentLeft="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,23 +57,29 @@
             android:id="@+id/buttonUpload"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:textColor="@color/white"
             android:layout_weight="1"
-            android:text="Upload" />
+            android:fontFamily="@font/gotham2"
+            android:text="Upload"
+            android:textColor="@color/white" />
+
         <Button
             android:id="@+id/buttonsignA"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:textColor="@color/white"
             android:layout_weight="1"
-            android:text="SignTest" />
+            android:fontFamily="@font/gotham2"
+            android:text="SignTest"
+            android:textColor="@color/white" />
+
         <TextView
             android:id="@+id/textViewShow"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/gotham2"
             android:padding="10dp"
             android:text="View Uploads"
             android:textAlignment="center"
+            android:textColor="@color/orangeAccent"
             android:textStyle="bold" />
     </LinearLayout>
 </RelativeLayout>
