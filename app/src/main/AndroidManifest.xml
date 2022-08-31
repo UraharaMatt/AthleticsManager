@@ -16,6 +16,9 @@
         android:theme="@style/Theme.AthleticsManager"
         tools:targetApi="31">
         <activity
+            android:name=".FileList"
+            android:exported="false" />
+        <activity
             android:name=".SignUpActivity"
             android:exported="false" />
         <activity

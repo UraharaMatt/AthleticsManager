@@ -14,6 +14,7 @@ import com.example.athleticsmanager.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
@@ -24,19 +25,21 @@ import com.google.firebase.storage.ktx.component2
 class MainActivity : AppCompatActivity() {
     lateinit var storage: FirebaseStorage
     private lateinit var storageRef: StorageReference
-    lateinit var fileUri: Uri
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityMainBinding
+    lateinit var fileUri: Uri
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Inizializzazione parametri
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         storage = Firebase.storage
         storageRef = Firebase.storage.reference
         auth = Firebase.auth
-
+        //Activity Result
         val launchUploadActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
         { result: ActivityResult ->
             if (result.resultCode == RESULT_OK) {
@@ -47,10 +50,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+        //button onClickListener
         with(binding){
             buttonChoose.setOnClickListener { showFileChooser(launchUploadActivity) }
             buttonUpload.setOnClickListener { onUploadClick() }
             buttonsignA.setOnClickListener { signInAnonymously() }
+            textViewShow.setOnClickListener { showFileList() }
         }
 
     }
@@ -80,19 +85,6 @@ class MainActivity : AppCompatActivity() {
             }*/
         }
     }
-    /*private fun uploadFiles() {
-        //Recupero immagine dalla memoria telefono
-        val launchUploadActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-        { result: ActivityResult ->
-            if (result.resultCode == RESULT_OK) {
-                val data = result.data
-                if (data != null){
-                    fileUri  = data.data!!
-                    binding.imageView.setImageURI(fileUri)
-                }
-            }
-        }
-    }*/
     private fun showFileChooser(launchUploadActivity: ActivityResultLauncher<Intent>) {
         val intentUp = Intent()
         intentUp.type = "*/*"
@@ -100,6 +92,9 @@ class MainActivity : AppCompatActivity() {
         launchUploadActivity.launch(intentUp)
     }
     private fun onUploadClick() {
+        val dbRef = Firebase.database.reference
+        val currentUser = auth.currentUser?.uid.toString()
+
         val filename = binding.eTXTNomeFile.text.toString().trim()
         if (filename.isEmpty()) {
             binding.eTXTNomeFile.error = "Inserire il nome dell'atleta"
@@ -108,25 +103,43 @@ class MainActivity : AppCompatActivity() {
         val filenameEst = filename+"."+ getFileExtension(fileUri)
         // [START create_child_reference]
         // Create a child reference
-        // imagesRef now points to "upload"
-        val uploadref = storageRef.child("upload/")
-        val uploadtask = uploadref.child("$filenameEst").putFile(fileUri)
+        // uploadRef now points to "upload"
+        val uploadref = storageRef.child("upload/$filenameEst")
+        Log.d(TAG, "$uploadref")
+
+        val uploadtask = uploadref.putFile(fileUri)
+        Log.d(TAG, "$uploadtask")
         uploadtask.addOnFailureListener {
             //Toast.makeText(this, "File Not Uploaded", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "File Uploaded:NULL")
         }.addOnSuccessListener {
             binding.imageView.setImageURI(null)
-            //Toast.makeText(this, "File Uploaded", Toast.LENGTH_SHORT).show()
-            Log.d(TAG, "File Uploaded:SUCCESS")
+            binding.eTXTNomeFile.text=null
         }.addOnProgressListener { (bytesTransferred, totalByteCount) ->
             val progress = (100.0 * bytesTransferred) / totalByteCount
             Log.d(TAG, "Upload is $progress% done")
+        }.addOnCompleteListener{
+            Log.d(TAG, "File Uploaded:SUCCESS")
+            //recupero link download e lo carico nel DB
+            uploadref.downloadUrl.addOnSuccessListener { urlTask ->
+                // download URL is available here
+                val url = urlTask.toString()
+                val infoUpload = Upload(filename,url)
+                dbRef.child("upload").child(currentUser).push().setValue(infoUpload)
+            }.addOnFailureListener { e ->
+                // Handle any errors
+            }
         }
     }
-    fun getFileExtension(uri: Uri?): String? {
+    private fun getFileExtension(uri: Uri?): String? {
         val cR = contentResolver
         val mime = MimeTypeMap.getSingleton()
         return mime.getExtensionFromMimeType(cR.getType(uri!!))
+    }
+    private fun showFileList(){
+        val intent = Intent(this, FileList::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }
