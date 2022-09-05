@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
     }
     private fun showFileChooser(launchUploadActivity: ActivityResultLauncher<Intent>) {
         val intentUp = Intent()
-        intentUp.type = "*/*"
+        intentUp.type = "image/*"
         intentUp.action = Intent.ACTION_GET_CONTENT
         launchUploadActivity.launch(intentUp)
     }
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity() {
                 // download URL is available here
                 val url = urlTask.toString()
                 val infoUpload = Upload(filename,url)
-                dbRef.child("upload").child(currentUser).push().setValue(infoUpload)
+                dbRef.child("upload").push().setValue(infoUpload)//.child(currentUser)
             }.addOnFailureListener { e ->
                 // Handle any errors
             }

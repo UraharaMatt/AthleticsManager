@@ -8,6 +8,11 @@ class Upload {
         naming = athlete
         url = address
     }
-
+    fun getName(): String? {
+        return naming
+    }
+    fun getLink(): String? {
+        return url
+    }
 
 }

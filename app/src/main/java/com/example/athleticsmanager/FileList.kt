@@ -1,28 +1,34 @@
 package com.example.athleticsmanager
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.athleticsmanager.databinding.ActivityFileListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
-import com.google.firebase.storage.ktx.component1
-import com.google.firebase.storage.ktx.component2
+
 
 class FileList : AppCompatActivity() {
     lateinit var storage: FirebaseStorage
     private lateinit var storageRef: StorageReference
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityFileListBinding
-    var fileListItems: ArrayList<String> = ArrayList()
+    private lateinit var adapter: ArrayAdapter<String?>
+    var uploadList: MutableList<Upload> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,31 +38,44 @@ class FileList : AppCompatActivity() {
         storage = Firebase.storage
         storageRef = Firebase.storage.reference
         auth = Firebase.auth
+        val currentuser= auth.currentUser
 
-        binding.buttonBack.setOnClickListener { returnBack() }
-        val uploadRef=storageRef.child("Upload")
+        //binding.filelistView.setOnItemClickListener(AdapterView.OnItemClickListener())
 
-        uploadRef.listAll().addOnSuccessListener { (items, prefixes) ->
-                prefixes.forEach { prefix ->
-                    // All the prefixes under listRef.
-                    // You may call listAll() recursively on them.
-                    fileListItems.add(prefix.name)
-                    Log.d(TAG, "${prefix.name}")
-                }
 
-                items.forEach { item ->
-                   /* fileListItems.add(0,item.name)
-                    // All the items under listRef.*/
-                    //Log.d(TAG, "${item.name}")
-                }
+        binding.filelistView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+            val namingList = uploadList[position]
+            Log.d(ContentValues.TAG, "${namingList.naming}")
+            /*
+            val intentDWNL = Intent()
+            intentDWNL.action = Intent.ACTION_VIEW
+            intentDWNL.setData(Uri.parse(namingList.getLink()))
+            launchItemClickAction.launch(intentDWNL)
+*/
+        }
+
+        val dbRef = Firebase.database.reference
+        val uploadRef = dbRef.child("upload")//.child(currentuser.toString())
+        uploadRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val item = snapshot.getValue(Upload::class.java)
+                uploadList.add(item!!)
+
             }
-            .addOnFailureListener {
-                // Uh-oh, an error occurred!
-                Log.d(TAG, "nessun item caricato")
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
             }
-        binding.filelistView.adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,fileListItems)
-    //val launchListFileActivity = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-    }
+
+        })
+        val uploads = arrayListOf<String?>()
+        for (item in 1..uploadList.size){
+            uploads.add(uploadList[item].getName())
+        }
+        adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,uploads)
+        binding.filelistView.adapter = adapter
+
+        binding.buttonBack.setOnClickListener { returnBack()}
+   }
     private fun returnBack()
     {
         val intent = Intent(this, MainActivity::class.java)
