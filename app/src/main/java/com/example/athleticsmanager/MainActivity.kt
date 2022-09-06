@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity() {
             buttonsignA.setOnClickListener { signInAnonymously() }
             textViewShow.setOnClickListener { showFileList() }
         }
-
     }
     public override fun onStart() {
         super.onStart()
@@ -66,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     private fun signInAnonymously() {
         // Sign in anonymously. Authentication is required to read or write from Firebase Storage.
         auth.signInAnonymously()
-            .addOnSuccessListener(this) { authResult ->
+            .addOnSuccessListener(this) {
                 Log.d(TAG, "signInAnonymously:SUCCESS")
                 //updateUI(authResult.user)
             }
@@ -103,13 +102,13 @@ class MainActivity : AppCompatActivity() {
         val filenameEst = filename+"."+ getFileExtension(fileUri)
         // [START create_child_reference]
         // Create a child reference
-        // uploadRef now points to "upload"
-        val uploadref = storageRef.child("upload/$filenameEst")
-        Log.d(TAG, "$uploadref")
+        // uploadRef now points to "upload" + file
+        val uploadRef = storageRef.child("upload/$filenameEst")
+        Log.d(TAG, "$uploadRef")
 
-        val uploadtask = uploadref.putFile(fileUri)
-        Log.d(TAG, "$uploadtask")
-        uploadtask.addOnFailureListener {
+        val uploadT = uploadRef.putFile(fileUri)
+        Log.d(TAG, "$uploadT")
+        uploadT.addOnFailureListener {
             //Toast.makeText(this, "File Not Uploaded", Toast.LENGTH_SHORT).show()
             Log.d(TAG, "File Uploaded:NULL")
         }.addOnSuccessListener {
@@ -121,10 +120,9 @@ class MainActivity : AppCompatActivity() {
         }.addOnCompleteListener{
             Log.d(TAG, "File Uploaded:SUCCESS")
             //recupero link download e lo carico nel DB
-            uploadref.downloadUrl.addOnSuccessListener { urlTask ->
+            uploadRef.downloadUrl.addOnSuccessListener { urlTask ->
                 // download URL is available here
-                val url = urlTask.toString()
-                val infoUpload = Upload(filename,url)
+                val infoUpload = Upload(filename, urlTask.toString())
                 dbRef.child("upload").push().setValue(infoUpload)//.child(currentUser)
             }.addOnFailureListener { e ->
                 // Handle any errors

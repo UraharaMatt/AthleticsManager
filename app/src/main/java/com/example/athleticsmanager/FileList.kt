@@ -1,11 +1,14 @@
 package com.example.athleticsmanager
 
+import android.app.DownloadManager
 import android.content.ContentValues
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.widget.AdapterView
+import android.webkit.MimeTypeMap
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
@@ -39,41 +42,36 @@ class FileList : AppCompatActivity() {
         storageRef = Firebase.storage.reference
         auth = Firebase.auth
         val currentuser= auth.currentUser
-
-        //binding.filelistView.setOnItemClickListener(AdapterView.OnItemClickListener())
-
-
-        binding.filelistView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
-            val namingList = uploadList[position]
-            Log.d(ContentValues.TAG, "${namingList.naming}")
-            /*
-            val intentDWNL = Intent()
-            intentDWNL.action = Intent.ACTION_VIEW
-            intentDWNL.setData(Uri.parse(namingList.getLink()))
-            launchItemClickAction.launch(intentDWNL)
-*/
-        }
-
         val dbRef = Firebase.database.reference
-        val uploadRef = dbRef.child("upload")//.child(currentuser.toString())
+        val uploadRef = dbRef.child("upload")
         uploadRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val item = snapshot.getValue(Upload::class.java)
-                uploadList.add(item!!)
-
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                for(postData in dataSnapshot.children) {
+                    val item = postData.getValue(Upload::class.java)
+                    uploadList.add(item!!)
+                }
+                val uploads = arrayListOf<String?>()
+                for (item in 1..uploadList.lastIndex){
+                    Log.d(ContentValues.TAG, "$item" + "-" + uploadList[item].getName().toString() )
+                    uploads.add(uploadList[item].getName())
+                }
+                adapter = ArrayAdapter(applicationContext,android.R.layout.simple_list_item_1,uploads)
+                binding.filelistView.adapter = adapter
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-
         })
-        val uploads = arrayListOf<String?>()
-        for (item in 1..uploadList.size){
-            uploads.add(uploadList[item].getName())
-        }
-        adapter = ArrayAdapter(this,android.R.layout.simple_list_item_1,uploads)
-        binding.filelistView.adapter = adapter
+        binding.filelistView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+            val namingList = uploadList[position]
+            Log.d(TAG, "$position - "+namingList.url.toString())
+            //Opening the upload file in browser using the upload url
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(namingList.url)
+            startActivity(intent)
+            //END OpenBrowser
 
+        }
         binding.buttonBack.setOnClickListener { returnBack()}
    }
     private fun returnBack()
@@ -91,6 +89,11 @@ class FileList : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+    private fun getFileExtension(uri: String?): String? {
+        val cR = contentResolver
+        val mime = MimeTypeMap.getSingleton()
+        return mime.getExtensionFromMimeType(cR.getType(Uri.parse(uri!!)))
     }
 
 }

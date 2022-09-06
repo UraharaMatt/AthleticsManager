@@ -24,16 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:textColor="@color/white"
+        android:textColor="@color/orangeAccent"
         android:fastScrollAlwaysVisible="false"
         android:fastScrollEnabled="true"
         android:scrollbarStyle="outsideOverlay" >
 
     </ListView>
-    <!--ImageView
-        android:id="@+id/imageviewClick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" /-->
 
     <LinearLayout
         android:layout_width="match_parent"
