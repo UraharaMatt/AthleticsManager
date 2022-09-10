@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.AdapterView.OnItemClickListener
@@ -23,6 +24,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import java.io.File
 
 
 class FileList : AppCompatActivity() {
@@ -51,8 +53,9 @@ class FileList : AppCompatActivity() {
                     uploadList.add(item!!)
                 }
                 val uploads = arrayListOf<String?>()
+                Log.d(TAG,"$uploadList.lastIndex")
                 for (item in 1..uploadList.lastIndex){
-                    Log.d(ContentValues.TAG, "$item" + "-" + uploadList[item].getName().toString() )
+                    Log.d(TAG, "$item" + "-" + uploadList[item].getName().toString() )
                     uploads.add(uploadList[item].getName())
                 }
                 adapter = ArrayAdapter(applicationContext,android.R.layout.simple_list_item_1,uploads)
@@ -70,10 +73,28 @@ class FileList : AppCompatActivity() {
             intent.data = Uri.parse(namingList.url)
             startActivity(intent)
             //END OpenBrowser
-
+            //download(namingList.url,namingList.naming)
         }
         binding.buttonBack.setOnClickListener { returnBack()}
    }
+
+    private fun download(url: String?, naming: String?) {
+        try{
+            val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+            val imageLink = Uri.parse(url)
+            val request = DownloadManager.Request(imageLink)
+            request
+                //.setMimeType("image/*")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setTitle(naming)
+                .setAllowedOverMetered(true)
+            downloadManager.enqueue(request)
+        }
+        catch (e:Exception){
+
+        }
+    }
+
     private fun returnBack()
     {
         val intent = Intent(this, MainActivity::class.java)

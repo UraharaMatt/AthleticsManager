@@ -1,15 +1,16 @@
 package com.example.athleticsmanager
 
-class Upload {
+class Upload (){
     var naming: String? = ""
     var url: String? = ""
-    constructor(){
-        var naming: String? = ""
-        var url: String? = ""
-    }
-    constructor(athlete: String?,address: String?){
-        naming = athlete
-        url = address
+
+    constructor(athlete: String?,address: String?) : this() {
+        if (athlete != null) {
+            naming = athlete
+        }
+        if (address != null) {
+            url = address
+        }
     }
     fun getName(): String? {
         return naming

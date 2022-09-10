@@ -106,10 +106,7 @@ class MainActivity : AppCompatActivity() {
         val uploadRef = storageRef.child("upload/$filenameEst")
         Log.d(TAG, "$uploadRef")
 
-        val uploadT = uploadRef.putFile(fileUri)
-        Log.d(TAG, "$uploadT")
-        uploadT.addOnFailureListener {
-            //Toast.makeText(this, "File Not Uploaded", Toast.LENGTH_SHORT).show()
+        uploadRef.putFile(fileUri).addOnFailureListener {
             Log.d(TAG, "File Uploaded:NULL")
         }.addOnSuccessListener {
             binding.imageView.setImageURI(null)
@@ -123,7 +120,7 @@ class MainActivity : AppCompatActivity() {
             uploadRef.downloadUrl.addOnSuccessListener { urlTask ->
                 // download URL is available here
                 val infoUpload = Upload(filename, urlTask.toString())
-                dbRef.child("upload").push().setValue(infoUpload)//.child(currentUser)
+                dbRef.child("upload").push().setValue(infoUpload)
             }.addOnFailureListener { e ->
                 // Handle any errors
             }

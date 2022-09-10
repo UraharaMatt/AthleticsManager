@@ -14,25 +14,21 @@ class UploadFileListAdapter(private var activity: Activity, private var items: A
     private class ViewHolder(row: View?){
         var nameView: TextView? = null
         //var userView: TextView? = null
-        var urlView: ImageButton? = null
+        //var urlView: ImageButton? = null
         init{
             this.nameView = row?.findViewById(R.id.athleteNameView)
-            this.urlView = row?.findViewById(R.id.imageButton)
+           // this.urlView = row?.findViewById(R.id.imageButton)
         }
-
     }
     override fun getCount(): Int {
         TODO("Not yet implemented")
     }
-
-    override fun getItem(position: Int): Any {
+    override fun getItem(poition: Int): Any {
         TODO("Not yet implemented")
     }
-
     override fun getItemId(position: Int): Long {
         TODO("Not yet implemented")
     }
-
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val viewHolder: ViewHolder
