@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageButton
 import android.widget.TextView
+import com.google.firebase.database.ValueEventListener
 import java.util.ArrayList
 
-class UploadFileListAdapter(private var activity: Activity, private var items: ArrayList<Upload>) : BaseAdapter(){
+class UploadFileListAdapter(private var activity: ValueEventListener, private var items: ArrayList<Upload>) : BaseAdapter(){
     private class ViewHolder(row: View?){
         var nameView: TextView? = null
         //var userView: TextView? = null
@@ -21,13 +22,13 @@ class UploadFileListAdapter(private var activity: Activity, private var items: A
         }
     }
     override fun getCount(): Int {
-        TODO("Not yet implemented")
+        return items.size
     }
-    override fun getItem(poition: Int): Any {
-        TODO("Not yet implemented")
+    override fun getItem(position: Int): Upload {
+        return items[position]
     }
     override fun getItemId(position: Int): Long {
-        TODO("Not yet implemented")
+        return position.toLong()
     }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View

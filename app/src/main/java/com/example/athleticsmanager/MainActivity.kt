@@ -99,6 +99,10 @@ class MainActivity : AppCompatActivity() {
             binding.eTXTNomeFile.error = "Inserire il nome dell'atleta"
             return
         }
+        if(fileUri.toString().isEmpty()){
+            binding.buttonChoose.error = "Caricare Immagine"
+            return
+        }
         val filenameEst = filename+"."+ getFileExtension(fileUri)
         // [START create_child_reference]
         // Create a child reference
@@ -106,7 +110,29 @@ class MainActivity : AppCompatActivity() {
         val uploadRef = storageRef.child("upload/$filenameEst")
         Log.d(TAG, "$uploadRef")
 
-        uploadRef.putFile(fileUri).addOnFailureListener {
+        val uploadTask = uploadRef.putFile(fileUri)
+        /*
+        val urlTask = uploadTask.continueWithTask{task->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                uploadRef.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUri = task.result
+                    val infoUpload = Upload(filename, downloadUri.toString())
+                    dbRef.child("upload").push().setValue(infoUpload).
+                    addOnSuccessListener {
+                        binding.imageView.setImageURI(null)
+                        binding.eTXTNomeFile.text=null
+                    }
+                } else {
+                    // Handle failures
+                }
+            }*/
+        .addOnFailureListener {
             Log.d(TAG, "File Uploaded:NULL")
         }.addOnSuccessListener {
             binding.imageView.setImageURI(null)
@@ -120,7 +146,9 @@ class MainActivity : AppCompatActivity() {
             uploadRef.downloadUrl.addOnSuccessListener { urlTask ->
                 // download URL is available here
                 val infoUpload = Upload(filename, urlTask.toString())
-                dbRef.child("upload").push().setValue(infoUpload)
+                dbRef.child("upload").push().setValue(infoUpload).addOnCompleteListener{
+
+                }
             }.addOnFailureListener { e ->
                 // Handle any errors
             }
