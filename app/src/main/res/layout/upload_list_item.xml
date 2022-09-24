@@ -79,7 +79,7 @@
             android:padding="8dp">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/btnDownloadFile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -88,7 +88,7 @@
                 android:minHeight="48dp"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/dwnorange" />
+                app:srcCompat="@drawable/ic_download_file" />
 
         </LinearLayout>
 

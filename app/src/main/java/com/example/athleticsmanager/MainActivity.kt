@@ -60,7 +60,13 @@ class MainActivity : AppCompatActivity() {
     }
     public override fun onStart() {
         super.onStart()
-        //updateUI(auth.currentUser)
+        // Check if user is signed in (non-null)
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
     private fun signInAnonymously() {
         // Sign in anonymously. Authentication is required to read or write from Firebase Storage.
@@ -73,16 +79,6 @@ class MainActivity : AppCompatActivity() {
                 Log.e(TAG, "signInAnonymously:FAILURE", exception)
                 //updateUI(null)
             }
-    }
-    private fun updateUI(user: FirebaseUser?) {
-        with(binding) {
-            // Signed in or Signed out
-            /*if (user != null) {
-                buttonsignA.visibility = View.GONE
-            } else {
-                buttonsignA.visibility = View.VISIBLE
-            }*/
-        }
     }
     private fun showFileChooser(launchUploadActivity: ActivityResultLauncher<Intent>) {
         val intentUp = Intent()
@@ -107,9 +103,8 @@ class MainActivity : AppCompatActivity() {
         // [START create_child_reference]
         // Create a child reference
         // uploadRef now points to "upload" + file
-        val uploadRef = storageRef.child("upload/$filenameEst")
+        val uploadRef = storageRef.child("upload/$currentUser/$filenameEst")
         Log.d(TAG, "$uploadRef")
-
         val uploadTask = uploadRef.putFile(fileUri)
         /*
         val urlTask = uploadTask.continueWithTask{task->

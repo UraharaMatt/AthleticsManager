@@ -57,13 +57,14 @@ class FileList : AppCompatActivity() {
                     uploads.add(item)
                 }
                 //adapter = ArrayAdapter(applicationContext,android.R.layout.simple_list_item_1,uploads)
-                adapter = UploadFileListAdapter(this,uploads)
+                adapter = UploadFileListAdapter(applicationContext,uploads)
                 binding.filelistView.adapter = adapter
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
         })
+
         binding.filelistView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
             val namingList = uploadList[position]
             Log.d(TAG, "$position - "+namingList.url.toString())
@@ -76,6 +77,10 @@ class FileList : AppCompatActivity() {
             // DOWNLOAD IMMAGINE IN FILE LOCALE
             download(namingList.url,namingList.naming)
         }
+        /*binding.filelistView.setOnItemClickListener{adVi,view,position,id->
+            val itemPOS=uploadList[position]
+
+        }*/
         binding.buttonBack.setOnClickListener { returnBack()}
    }
 
