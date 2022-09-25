@@ -6,6 +6,7 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.webkit.MimeTypeMap
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         with(binding){
             buttonChoose.setOnClickListener { showFileChooser(launchUploadActivity) }
             buttonUpload.setOnClickListener { onUploadClick() }
-            buttonsignA.setOnClickListener { signInAnonymously() }
+            buttonsignA.setOnClickListener { logOut() }
             textViewShow.setOnClickListener { showFileList() }
         }
     }
@@ -106,27 +107,6 @@ class MainActivity : AppCompatActivity() {
         val uploadRef = storageRef.child("upload/$currentUser/$filenameEst")
         Log.d(TAG, "$uploadRef")
         val uploadTask = uploadRef.putFile(fileUri)
-        /*
-        val urlTask = uploadTask.continueWithTask{task->
-                if (!task.isSuccessful) {
-                    task.exception?.let {
-                        throw it
-                    }
-                }
-                uploadRef.downloadUrl
-            }.addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val downloadUri = task.result
-                    val infoUpload = Upload(filename, downloadUri.toString())
-                    dbRef.child("upload").push().setValue(infoUpload).
-                    addOnSuccessListener {
-                        binding.imageView.setImageURI(null)
-                        binding.eTXTNomeFile.text=null
-                    }
-                } else {
-                    // Handle failures
-                }
-            }*/
         .addOnFailureListener {
             Log.d(TAG, "File Uploaded:NULL")
         }.addOnSuccessListener {
@@ -140,12 +120,12 @@ class MainActivity : AppCompatActivity() {
             //recupero link download e lo carico nel DB
             uploadRef.downloadUrl.addOnSuccessListener { urlTask ->
                 // download URL is available here
-                val infoUpload = Upload(filename, urlTask.toString())
-                dbRef.child("upload").push().setValue(infoUpload).addOnCompleteListener{
-
+                val infoUpload = Upload(filename, urlTask.toString())//,useremail)
+                dbRef.child("upload").child(currentUser).push().setValue(infoUpload).addOnCompleteListener{
+                    Log.d(TAG,"$filename + $urlTask")
                 }
             }.addOnFailureListener { e ->
-                // Handle any errors
+                Log.d(TAG,"fallito")
             }
         }
     }
@@ -156,6 +136,12 @@ class MainActivity : AppCompatActivity() {
     }
     private fun showFileList(){
         val intent = Intent(this, FileList::class.java)
+        startActivity(intent)
+        finish()
+    }
+    fun logOut() {
+        FirebaseAuth.getInstance().signOut()
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }

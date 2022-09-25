@@ -4,27 +4,29 @@
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:layout_weight="6"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
         android:orientation="vertical"
         android:padding="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="5dp">
 
             <TextView
                 android:id="@+id/athleteNameText"
-                android:layout_width="0px"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Atleta"
                 android:fontFamily="@font/gotham2"
+                android:text="File Utente"
+                android:textColor="@color/orangeAccent"
                 android:textStyle="bold" />
 
             <TextView
@@ -34,7 +36,8 @@
                 android:layout_weight="2"
                 android:fontFamily="@font/gothamthin"
                 android:text="nome"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/darkblue" />
         </LinearLayout>
 
         <LinearLayout
@@ -48,7 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:fontFamily="@font/gotham2"
-                android:text="Utente"
+                android:text="Mail Utente"
+                android:textColor="@color/orangeAccent"
                 android:textStyle="bold" />
 
             <TextView
@@ -59,38 +63,53 @@
                 android:fontFamily="@font/gothamthin"
                 android:text="Nome Utente"
                 android:textAlignment="center"
+                android:textColor="@color/darkblue"
                 android:textStyle="italic" />
         </LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="0px"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:orientation="horizontal"
-            android:padding="8dp">
+            android:layout_marginTop="5dp">
 
-            <ImageButton
+            <Button
+                android:id="@+id/btnDeleteFile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:adjustViewBounds="true"
+                android:background="@color/orangeAccent"
+                android:cropToPadding="false"
+                android:fontFamily="@font/gotham2"
+                android:minHeight="48dp"
+                android:padding="5dp"
+                android:textSize="15sp"
+                android:scaleType="fitCenter"
+                android:text="ELIMINA FILE"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
+                android:textColor="@color/darkblue"
+                app:icon="@drawable/ic_delete_file" />
+
+            <Button
                 android:id="@+id/btnDownloadFile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:adjustViewBounds="true"
+                android:background="@color/orangeAccent"
                 android:cropToPadding="false"
                 android:minHeight="48dp"
                 android:padding="5dp"
+                android:fontFamily="@font/gotham2"
+                android:textSize="15sp"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/ic_download_file" />
+                android:text="DOWNLOAD FILE"
+                android:textColor="@color/darkblue"
+                app:icon="@drawable/ic_download_file"/>
 
         </LinearLayout>
 
     </LinearLayout>
+
+
 </LinearLayout>

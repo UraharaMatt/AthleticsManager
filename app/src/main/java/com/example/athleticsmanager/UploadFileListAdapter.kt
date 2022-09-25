@@ -2,22 +2,19 @@ package com.example.athleticsmanager
 
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
+import android.content.Context.DOWNLOAD_SERVICE
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageButton
+import android.widget.Button
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.startActivity
 import java.util.ArrayList
 
 class UploadFileListAdapter(context: Context, private var items: ArrayList<Upload>) : BaseAdapter(){
-    private val inflater: LayoutInflater
-            = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
+    private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val localcontext=context
     override fun getCount(): Int {
         return items.size
     }
@@ -32,33 +29,31 @@ class UploadFileListAdapter(context: Context, private var items: ArrayList<Uploa
         val rowView = inflater.inflate(R.layout.upload_list_item, parent, false)
         val nameView = rowView.findViewById(R.id.athleteNameView) as TextView
         val userView = rowView.findViewById(R.id.User) as TextView
-        val imgButton = rowView.findViewById(R.id.btnDownloadFile) as ImageButton
+        val downloadButton = rowView.findViewById(R.id.btnDownloadFile) as Button
+        val delButton = rowView.findViewById(R.id.btnDeleteFile) as Button
         val res = items[position]
         nameView.text=res.naming
-        userView.text=""
-        updateEvent(imgButton, res.url, res.naming)
+        userView.text=res.url
+        updateEvent(downloadButton,delButton, res.url, res.naming,localcontext)
         return rowView
     }
-    private fun updateEvent(imgButton: ImageButton, url: String?, naming: String?) {
-        imgButton.setOnClickListener{
-            //try{
-              //  val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                //val imageLink = Uri.parse(url)
-                //val request = DownloadManager.Request(imageLink)
-                //request
-                    //.setMimeType("image/*")
-                  //  .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    //.setTitle(naming)
-                    //.setAllowedOverMetered(true)
-                //downloadManager.enqueue(request)
-            //}
-            /*catch (e:Exception){
-
-            }*//*
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(url)
-            startActivity(intent)*/
+    private fun updateEvent(downloadButton: Button, delButton: Button, url: String?, naming: String?, localcontext: Context) {
+        downloadButton.setOnClickListener{
+            try{
+                val downloadManager = localcontext.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                val imageLink = Uri.parse(url)
+                val request = DownloadManager.Request(imageLink)
+                request
+                    .setMimeType("image/*")
+                    .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                    .setTitle(naming)
+                    .setAllowedOverMetered(true)
+                    downloadManager.enqueue(request)
+            }
+            catch (e:Exception){
+            }
         }
+        delButton.setOnClickListener{}
     }
     /*
     private class ViewHolder(row: View?){

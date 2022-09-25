@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/bg2"
+    android:background="@drawable/bg3"
     tools:context=".SignUpActivity"
-    android:padding="30dp"
+    android:padding="20dp"
     >
 
     <TextView
@@ -29,7 +29,7 @@
         android:paddingBottom="20dp"
         android:text="Storagemanager"
         android:textColor="#FFFFFF"
-        android:textSize="40dp"
+        android:textSize="30dp"
         android:textStyle="bold" />
 
     <com.google.android.material.textfield.TextInputLayout
@@ -107,7 +107,9 @@
         app:endIconMode="password_toggle">
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <LinearLayout
@@ -119,7 +121,7 @@
         <Button
             android:id="@+id/buttonsignup"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/gotham2"
             android:text="SignUp"

@@ -5,16 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="20dp"
+    android:background="@color/white"
     tools:context=".FileList">
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/gothamthin"
+        android:fontFamily="@font/gotham2"
         android:gravity="center"
         android:text="Elenco File "
         android:layout_marginTop="16dp"
-        android:textColor="@color/orangeAccent"
+        android:layout_marginBottom="16dp"
+        android:textColor="@color/darkblue"
         android:textSize="36sp"
         android:textStyle="bold"/>
 
@@ -23,7 +27,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:textColor="@color/orangeAccent"
         android:fastScrollAlwaysVisible="false"
         android:fastScrollEnabled="true"
         android:scrollbarStyle="outsideOverlay" >

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/darkblue"
-
+android:padding="20dp"
     tools:context="MainActivity">
 
     <LinearLayout
@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:fontFamily="@font/gotham2"
-            android:hint="Inserisci nome atleta"
+            android:hint="Inserisci nome file"
+            android:minHeight="48dp"
             android:textColor="@color/white"
             android:textColorHighlight="#FF5722"
             android:textColorHint="@color/white"
@@ -62,16 +63,6 @@
             android:fontFamily="@font/gotham2"
             android:text="Upload"
             android:textColor="@color/white" />
-
-        <Button
-            android:id="@+id/buttonsignA"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/gotham2"
-            android:text="SignTest"
-            android:textColor="@color/white" />
-
         <TextView
             android:id="@+id/textViewShow"
             android:layout_width="match_parent"
@@ -82,5 +73,15 @@
             android:textAlignment="center"
             android:textColor="@color/orangeAccent"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/buttonsignA"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/gotham2"
+            android:text="LOGOUT"
+            android:textColor="@color/darkblue" />
+
     </LinearLayout>
 </RelativeLayout>

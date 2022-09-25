@@ -46,13 +46,13 @@ class FileList : AppCompatActivity() {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for(postData in dataSnapshot.children) {
                     val item = postData.getValue(Upload::class.java)
+                    Log.d(TAG,"${item?.naming} + ${item?.url}")
                     uploadList.add(item!!)
                 }
-                //val uploads = arrayListOf<String?>()
                 val uploads : ArrayList<Upload> = ArrayList()
                 Log.d(TAG,"$uploadList")
                 for (item in uploadList){
-                    Log.d(TAG, "${item.getName()}")
+                    Log.d(TAG, "${item.naming}")
                     //uploads.add(uploadList[item].getName())
                     uploads.add(item)
                 }
@@ -64,7 +64,7 @@ class FileList : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
         })
-
+/* downlaod file form list
         binding.filelistView.onItemClickListener = OnItemClickListener { parent, view, position, id ->
             val namingList = uploadList[position]
             Log.d(TAG, "$position - "+namingList.url.toString())
@@ -81,6 +81,7 @@ class FileList : AppCompatActivity() {
             val itemPOS=uploadList[position]
 
         }*/
+ */
         binding.buttonBack.setOnClickListener { returnBack()}
    }
 
@@ -112,7 +113,7 @@ class FileList : AppCompatActivity() {
         // Check if user is signed in (non-null)
         val currentUser = auth.currentUser
         if (currentUser == null) {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         }

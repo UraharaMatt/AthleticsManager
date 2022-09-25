@@ -3,10 +3,12 @@ package com.example.athleticsmanager
 class Upload{
     var naming: String? =""
     var url: String?=""
+    //var usermail: String?=""
     constructor(){}
-    constructor(naming: String?,url: String?){
+    constructor(naming: String?,url: String? ){
         this.naming=naming
         this.url=url
+        //this.usermail=usermail
     }
     /*constructor(athlete: String?,address: String?) : this() {
         if (athlete != null) {
@@ -16,18 +18,16 @@ class Upload{
             url = address
         }
     }*/
-    fun getName(): String? {
-        return naming
-    }
-    fun getLink(): String? {
-        return url
-    }
-    fun setName(naming :String?){
-        this.naming=naming
-    }
-    fun setLink(url :String?){
-        this.url=url
-    }
+    fun getName(): String? { return naming }
+    fun getLink(): String? { return url }
+    fun setName(naming :String?){ this.naming=naming }
+    fun setLink(url :String?){ this.url=url }
+    /*fun getMail(): String? {
+    return usermail
+}
+fun setMail(mail :String?){
+    this.usermail=mail
+}*/
 }
 /*
 * public class User {
