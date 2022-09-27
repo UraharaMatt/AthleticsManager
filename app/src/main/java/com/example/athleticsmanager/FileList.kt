@@ -10,6 +10,8 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.athleticsmanager.databinding.ActivityFileListBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -24,12 +26,15 @@ import com.google.firebase.storage.ktx.storage
 
 
 class FileList : AppCompatActivity() {
-    lateinit var storage: FirebaseStorage
+    private lateinit var storage: FirebaseStorage
     private lateinit var storageRef: StorageReference
     private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityFileListBinding
-    private lateinit var adapter: UploadFileListAdapter
+    //private lateinit var adapter1: UploadFileListAdapter
     var uploadList: MutableList<Upload> = ArrayList()
+    private lateinit var adapter: UploadListAdapter
+    private lateinit var recyclerView: RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,26 +44,36 @@ class FileList : AppCompatActivity() {
         storage = Firebase.storage
         storageRef = Firebase.storage.reference
         auth = Firebase.auth
-        val currentuser= auth.currentUser
+        val currentuser= auth.currentUser?.uid.toString()
+        recyclerView=binding.recyclerview
+        recyclerView.setHasFixedSize(true)
+        recyclerView.layoutManager=LinearLayoutManager(this)
+
         val dbRef = Firebase.database.reference
-        val uploadRef = dbRef.child("upload")
+        val uploadRef = dbRef.child("upload").child(currentuser)
         uploadRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
                 for(postData in dataSnapshot.children) {
                     val item = postData.getValue(Upload::class.java)
-                    Log.d(TAG,"${item?.naming} + ${item?.url}")
+                    Log.d(TAG,"${item?.filename} + ${item?.url}")
                     uploadList.add(item!!)
                 }
-                val uploads : ArrayList<Upload> = ArrayList()
+                /*val uploads : ArrayList<Upload> = ArrayList()
                 Log.d(TAG,"$uploadList")
                 for (item in uploadList){
-                    Log.d(TAG, "${item.naming}")
+                    Log.d(TAG, "${item.filename}")
                     //uploads.add(uploadList[item].getName())
                     uploads.add(item)
-                }
+                }*/
                 //adapter = ArrayAdapter(applicationContext,android.R.layout.simple_list_item_1,uploads)
-                adapter = UploadFileListAdapter(applicationContext,uploads)
-                binding.filelistView.adapter = adapter
+                /*adapter = UploadFileListAdapter(applicationContext,
+                    uploadList
+                )
+                binding.filelistView.adapter = adapter*/
+                adapter = UploadListAdapter(applicationContext,uploadList)
+                Log.d(TAG, adapter.itemCount.toString())
+                recyclerView.adapter=adapter
+
             }
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
@@ -85,7 +100,7 @@ class FileList : AppCompatActivity() {
         binding.buttonBack.setOnClickListener { returnBack()}
    }
 
-    private fun download(url: String?, naming: String?) {
+    private fun download(url: String?, filename: String?) {
         try{
             val downloadManager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             val imageLink = Uri.parse(url)
@@ -93,7 +108,7 @@ class FileList : AppCompatActivity() {
             request
                 //.setMimeType("image/*")
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                .setTitle(naming)
+                .setTitle(filename)
                 .setAllowedOverMetered(true)
             downloadManager.enqueue(request)
         }

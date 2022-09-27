@@ -1,36 +1,44 @@
 package com.example.athleticsmanager
 
+import com.google.firebase.database.IgnoreExtraProperties
+
+@IgnoreExtraProperties
 class Upload{
-    var naming: String? =""
+    var filename: String? =""
     var url: String?=""
     //var usermail: String?=""
     constructor(){}
-    constructor(naming: String?,url: String? ){
-        this.naming=naming
+    constructor(filename: String?,url: String? ){
+        this.filename=filename
         this.url=url
         //this.usermail=usermail
     }
+}
     /*constructor(athlete: String?,address: String?) : this() {
         if (athlete != null) {
-            naming = athlete
+            filename = athlete
         }
         if (address != null) {
             url = address
         }
     }*/
-    fun getName(): String? { return naming }
-    fun getLink(): String? { return url }
-    fun setName(naming :String?){ this.naming=naming }
-    fun setLink(url :String?){ this.url=url }
+    /*@JvmName("getFilename1")
+    fun getFilename(): String? { return filename }
+    @JvmName("getUrl1")
+    fun getUrl(): String? { return url }
+    @JvmName("setFilename1")
+    fun setFilename(filename :String?){ this.filename=filename }
+    @JvmName("setUrl1")
+    fun setUrl(url :String?){ this.url=url }
     /*fun getMail(): String? {
-    return usermail
+    return usermail*/
 }
 fun setMail(mail :String?){
     this.usermail=mail
 }*/
-}
+
 /*
-* public class User {
+ public class User {
 
     private String uid;
     private String username;

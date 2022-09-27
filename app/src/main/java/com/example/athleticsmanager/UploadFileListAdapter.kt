@@ -12,9 +12,9 @@ import android.widget.Button
 import android.widget.TextView
 import java.util.ArrayList
 
-class UploadFileListAdapter(context: Context, private var items: ArrayList<Upload>) : BaseAdapter(){
+class UploadFileListAdapter(context: Context, private var items: MutableList<Upload>) : BaseAdapter(){
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    val localcontext=context
+    private val contextLocal=context
     override fun getCount(): Int {
         return items.size
     }
@@ -28,25 +28,25 @@ class UploadFileListAdapter(context: Context, private var items: ArrayList<Uploa
         // Get view for row item
         val rowView = inflater.inflate(R.layout.upload_list_item, parent, false)
         val nameView = rowView.findViewById(R.id.athleteNameView) as TextView
-        val userView = rowView.findViewById(R.id.User) as TextView
+        //val userView = rowView.findViewById(R.id.User) as TextView
         val downloadButton = rowView.findViewById(R.id.btnDownloadFile) as Button
         val delButton = rowView.findViewById(R.id.btnDeleteFile) as Button
         val res = items[position]
-        nameView.text=res.naming
-        userView.text=res.url
-        updateEvent(downloadButton,delButton, res.url, res.naming,localcontext)
+        nameView.text=res.filename
+        //userView.text=res.url.toString().trim()
+        updateEvent(downloadButton,delButton, res.url, res.filename,contextLocal)
         return rowView
     }
-    private fun updateEvent(downloadButton: Button, delButton: Button, url: String?, naming: String?, localcontext: Context) {
+    private fun updateEvent(downloadButton: Button, delButton: Button, url: String?, filename: String?, contextLocal: Context) {
         downloadButton.setOnClickListener{
             try{
-                val downloadManager = localcontext.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                val downloadManager = contextLocal.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
                 val imageLink = Uri.parse(url)
                 val request = DownloadManager.Request(imageLink)
                 request
                     .setMimeType("image/*")
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    .setTitle(naming)
+                    .setTitle(filename)
                     .setAllowedOverMetered(true)
                     downloadManager.enqueue(request)
             }
@@ -79,7 +79,7 @@ class UploadFileListAdapter(context: Context, private var items: ArrayList<Uploa
             viewHolder = view.tag as ViewHolder
         }
         val res = items[position]
-        viewHolder.nameView?.text = res.naming
+        viewHolder.nameView?.text = res.filename
 //        viewHolder.urlView?.setImageURI() = null
         return view
     }*/
