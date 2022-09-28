@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.webkit.MimeTypeMap
-import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -70,7 +69,7 @@ class FileList : AppCompatActivity() {
                     uploadList
                 )
                 binding.filelistView.adapter = adapter*/
-                adapter = UploadListAdapter(applicationContext,uploadList)
+                adapter = UploadListAdapter(applicationContext,currentuser,uploadRef,storageRef,uploadList)
                 Log.d(TAG, adapter.itemCount.toString())
                 recyclerView.adapter=adapter
 
@@ -116,7 +115,6 @@ class FileList : AppCompatActivity() {
 
         }
     }
-
     private fun returnBack()
     {
         val intent = Intent(this, MainActivity::class.java)

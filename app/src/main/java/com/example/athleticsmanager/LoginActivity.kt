@@ -29,9 +29,9 @@ class LoginActivity : AppCompatActivity() {
             with(binding) {
                 buttonLogin.setOnClickListener{onLoginClick(binding)}
                 redirectSignup.setOnClickListener{onSignUpClick()}
+                ForgottenPassword.setOnClickListener { reSendPassword() }
         }
     }
-
     private fun onLoginClick(binding: ActivityLoginBinding) {
         val email = binding.emailLogin.editText?.text.toString().trim()
         val password = binding.passwordConfirm.editText?.text.toString().trim()
@@ -84,5 +84,23 @@ class LoginActivity : AppCompatActivity() {
         val intent = Intent(this, SignUpActivity::class.java)
         startActivity(intent)
         finish()
+    }
+    private fun reSendPassword() {
+        val currentlyUser = auth.currentUser
+        val uid = currentlyUser!!.uid
+        var emailAddress =""
+        val emailRef = Firebase.database.reference.child("users").child(uid).child("email")
+            .get().addOnSuccessListener {
+                Log.i("firebase", "Got value ${it.value}")
+                emailAddress=it.value.toString().trim()
+            }.addOnFailureListener{
+                Log.e("firebase", "Error getting data", it)
+            }
+        auth.sendPasswordResetEmail(emailAddress)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d(TAG, "Email sent.")
+                }
+            }
     }
 }

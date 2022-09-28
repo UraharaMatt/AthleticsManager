@@ -87,6 +87,16 @@
             android:textColor="@color/white" />
 
         <TextView
+            android:id="@+id/ForgottenPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/gotham2"
+            android:padding="10dp"
+            android:text="Password dimenticata?"
+            android:textAlignment="center"
+            android:textColor="@color/white"/>
+
+        <TextView
             android:id="@+id/redirectSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
